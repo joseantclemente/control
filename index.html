@@ -97,6 +97,125 @@
     
     <script>
 		$(document).ready(function() {
+			$('#formlogin').click(function() 
+			{
+				/*var iuser = document.getElementById("usuario");
+				var ipass = document.getElementById("contra");
+				var user = document.getElementById("usuario").value;
+				var pass = document.getElementById("contra").value;*/
+				
+				var $iuser = $('#usuario');
+				var $ipass = $('#contra');
+				var $user = $('#usuario').val();
+				var $pass = $('#contra').val();
+				
+				if($user=='' || $user==null){
+					$( "#msglogin" ).removeClass( "oculta" ).addClass( "muestra" );
+					$( "#msglogin" ).html( "<p>Introduzca su nombre de usuario.</p>" );
+					
+					$iuser.addClass( "error" );
+					$iuser.focus();
+					$ipass.addClass( "text_area" );
+				}else if($pass=='' || $pass==null){
+					$( "#msglogin" ).removeClass( "oculta" ).addClass( "muestra" );
+					$( "#msglogin" ).html( "<p>Introduzca su contraseña.</p>" );
+					
+					$ipass.addClass( "error" );
+					$ipass.focus();
+					$iuser.addClass( "text_area" );
+					
+				}
+	
+				
+				
+				
+				/*if(user=="" || user==null)
+				{
+					document.getElementById("msglogin").setAttribute("class", "muestra");
+					document.getElementById("msglogin").innerHTML = "<p>Introduzca su nombre de usuario.</p>";
+					
+					iuser.className.replace("text_area","");
+					iuser.setAttribute("class", "text_area error");
+					iuser.setAttribute("className", "text_area error");
+					iuser.focus();
+					
+					ipass.setAttribute("class", "text_area");
+					ipass.setAttribute("className", "text_area");
+				}*/
+				/*else if(pass=="" || pass==null)
+				{
+					document.getElementById("msglogin").setAttribute("class", "muestra");
+					document.getElementById("msglogin").innerHTML = "<p>Introduzca su contraseña.</p>";
+									
+					ipass.className.replace("text_area","");
+					ipass.setAttribute("class", "text_area error");
+					ipass.setAttribute("className", "text_area error");
+					ipass.focus();
+					
+					iuser.setAttribute("class", "text_area");
+					iuser.setAttribute("className", "text_area");
+				}*/
+				else
+				{
+					$.ajax({
+						url: './verificar.php?user='+user+'&pass='+pass,
+						type: 'GET',
+	
+						success: function (response) {
+							if(response.correcto=="OK")
+							{
+								//document.getElementById("msglogin").innerHTML = "";
+								//window.location=response.enlace;
+								//Redirigimos a la direccion almacenada en reponse.enlace
+								
+								$( "#msglogin" ).html( "" );
+								$(location).attr('href',response.enlace);
+							}
+							else if(response.correcto=="NO")
+							{
+								if (response.respuesta=="datos")
+								{
+									document.getElementById("msglogin").setAttribute("class", "muestra");
+									document.getElementById("msglogin").innerHTML = "<p>Usuario o contraseña incorrectos.</p>";
+									iuser.focus();
+									
+									iuser.className.replace("text_area","");// primero eliminamos la clase que exista ya
+									iuser.setAttribute("class", "text_area error"); //Para la mayoria de los navegadores
+									iuser.setAttribute("className", "text_area error"); //Para IE*/
+								
+									ipass.setAttribute("class", "text_area"); //Para la mayoria de los navegadores
+									ipass.setAttribute("className", "text_area"); //Para IE
+									
+									
+								}else if(response.respuesta=="conexion"){
+									document.getElementById("msglogin").setAttribute("class", "muestra");
+									document.getElementById("msglogin").innerHTML = "<p>Error al establecer conexión.</p>";
+									ipass.focus();
+									
+									ipass.className.replace("text_area","");// primero eliminamos la clase que exista ya
+									ipass.setAttribute("class", "text_area error"); //Para la mayoria de los navegadores
+									ipass.setAttribute("className", "text_area error"); //Para IE
+									
+									iuser.setAttribute("class", "text_area"); //Para la mayoria de los navegadores
+									iuser.setAttribute("className", "text_area"); //Para IE
+								}
+							}
+						},
+	
+					});
+				}
+			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			var first = true;
 	
 			// Hide menu once we know its width
