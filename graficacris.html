@@ -54,6 +54,9 @@ parametro=(ayer.getDate()+"-"+(ayer.getMonth()+1)+"-"+ayer.getFullYear());
 var activadiaria, reactivadiaria, porcentajediario;
 var activamensual, reactivamensual, porcentajemensual;
 var activaanual, reactivaanual, porcentajeanual;
+var activa=[];
+var reactiva=[];
+var anyo, mes, dia;
 
 function ponerdatos()
 {
@@ -105,10 +108,26 @@ porcentajesemanal=point.porcentajesemanal;
 				valores.push(new Date(graficas2[0],graficas2[1],graficas2[2],graficas2[3],graficas2[4]));
 				valores.push(parseFloat(graficas2[5]));
 				valores.push(parseFloat(graficas2[6]));
+				if (i==0)
+				{
+				anyo=parseInt(graficas2[0]);
+				mes=parseInt(graficas2[1]);
+				dia=parseInt(graficas2[2]);
+				}
+				
+				//activa.push(parseFloat(graficas2[5]));
+				
+				
+				if (i!=192)
+				{
+					activa.push(parseFloat(graficas2[5]));
+					reactiva.push(parseFloat(graficas2[6]));
+					}
+				
 				
 				
 			
-			graficasbueno.push(valores);
+			//graficasbueno.push(valores);
 				}
 
 		}
@@ -119,41 +138,63 @@ porcentajesemanal=point.porcentajesemanal;
 
 
 
-	 graficasbueno=[];
-	 cogerDatos();
-	      google.load("visualization", "1", {packages:["corechart"]});
-     google.setOnLoadCallback(drawChart);
+	 
+	    
 	 function ejecutar()
 {
-	 setActive
-	 ponerdatos();
+	graficasbueno=[];
 
-}
-      function drawChart() {
-
-        var options = {
-          title: null
-        };
-		    var data = new google.visualization.DataTable();
-
-  			data.addColumn('datetime', 'Fecha');
-			data.addColumn('number', 'E. Activa');
-			data.addColumn('number', 'E. Reactiva');
-  
-			//data.addColumn({type:'string', role:'style'});
-
-   // Create random stock values, just like it works in reality.
-   
-   
+	
+ ponerdatos();
+	
+}	 
+cogerDatos();
+console.log(activa);
 
 
-data.addRows(graficasbueno);
-        var chart = new google.visualization.LineChart(document.getElementById('chart'));
+     $(function () {
+	 
+    $('#container').highcharts({
+        chart: {
+           
+			type:'line'
+        },
+        title: null,
+        
+        xAxis: {
+            type: 'datetime',
+            minRange: 7 * 24 * 3600000 // fourteen days
+        },
+        yAxis: {
+            title: null,
+        },
+        legend: {
+            enabled: true
+        },
+        plotOptions: {
+         
+        },
 
-        chart.draw(data, options);
-      }
-	  			
-	  
+        series: [{
+            type: 'line',
+            name: 'Energia Activa',
+            pointInterval:  3600 * 1000 ,
+            pointStart: Date.UTC(anyo, mes, dia),
+            data: activa
+        },
+		{
+            type: 'line',
+            name: 'Energia Reactiva',
+            pointInterval: 3600 * 1000,
+            pointStart: Date.UTC(anyo, mes, dia),
+            data: reactiva,
+			color:'red'
+        }]
+    });
+});
+
+
+
     </script>
     
     
@@ -191,10 +232,10 @@ data.addRows(graficasbueno);
 	</header>
     
     
-    
+<script src="http://code.highcharts.com/highcharts.js"></script>    
 	<div class="container">
   		<h1 class="raleway fleft minmargen">Activa/Reactiva semanal</h1>
-  		<div class="divchart"><div id="chart"></div></div>
+  		<div class="divchart"><div id="container"></div></div>
         <h1 class="raleway fleft">Consumo Medio</h1>
       
         <div class="tconsumo fleft">
